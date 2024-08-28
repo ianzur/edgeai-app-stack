@@ -180,7 +180,7 @@ gst_plugins_clean:
 
 gst_apps: dl_inferer_install gst_plugins_install apps_utils_install
 	@echo "Building Gst Apps"
-	cd $(GST_APPS_PATH)/apps_cpp; \
+	cd $(GST_APPS_PATH)apps_cpp; \
 	mkdir build; \
 	cd build; \
 	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
@@ -190,11 +190,11 @@ gst_apps_install: gst_apps
 	@echo "Install Gst Apps"
 	cd $(GST_APPS_PATH); \
 	mkdir -p $(INSTALL_PATH)/opt/edgeai-gst-apps-pc; \
-	cp -r $(GST_APPS_PATH)/* $(INSTALL_PATH)/opt/edgeai-gst-apps-pc/
+	cp -r * $(INSTALL_PATH)/opt/edgeai-gst-apps-pc/
 
 gst_apps_clean:
 	@echo "Clean Gst Apps"
-	cd $(GST_APPS_PATH)/apps_cpp; \
+	cd $(GST_APPS_PATH)apps_cpp; \
 	rm -rf build bin lib
 
 ########################### EDGEAI-TIOVX-MODULES ###############################
