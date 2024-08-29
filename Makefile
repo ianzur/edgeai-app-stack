@@ -92,6 +92,7 @@ dl_inferer: apps_utils_install
 	@echo "Building DL Inferer"
 	cd $(DL_INFERER_PATH); \
 	./setup_script.sh
+	cd $(DL_INFERER_PATH); \
 	mkdir build; \
 	cd build; \
 	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
