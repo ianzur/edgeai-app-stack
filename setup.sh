@@ -10,6 +10,7 @@ if [ ! -d arm-gnu-toolchain-13.2.Rel1-x86_64-aarch64-none-linux-gnu ]; then
 fi
 
 if [ ! -d targetfs ]; then
+<<<<<<< HEAD
     if [ "$SOC" == "j721e" ]; then
         wget https://dr-download.ti.com/software-development/software-development-kit-sdk/MD-U6uMjOroyO/09.02.00.05/tisdk-adas-image-j721e-evm.tar.xz
         mv tisdk-adas-image-j721e-evm.tar.xz targetfs.tar.xz
@@ -24,9 +25,9 @@ if [ ! -d targetfs ]; then
         mv tisdk-adas-image-j722s-evm.tar.xz targetfs.tar.xz
     elif [ "$SOC" == "am62a" ]; then
         wget https://dr-download.ti.com/software-development/software-development-kit-sdk/MD-D37Ls3JjkT/09.02.00.05/tisdk-edgeai-image-am62axx-evm.wic.xz
-        mv tisdk-edgeai-image-am62axx-evm.tar.xz targetfs.tar.xz
+       mv tisdk-edgeai-image-am62axx-evm.tar.xz targetfs.tar.xz
     else
-        wget https://dr-download.ti.com/software-development/software-development-kit-sdk/MD-Snl3iJzGTW/09.02.00.05/tisdk-adas-image-j721s2-evm.tar.xz
+        wget https://dr-download.ti.com/software-development/software-development-kit-sdk/MD-Snl3iJzGTW/10.00.00.08/tisdk-adas-image-j721s2-evm.tar.xz
         mv tisdk-adas-image-j721s2-evm.tar.xz targetfs.tar.xz
     fi
     mkdir targetfs
