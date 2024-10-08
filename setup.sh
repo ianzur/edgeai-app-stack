@@ -10,7 +10,6 @@ if [ ! -d arm-gnu-toolchain-13.2.Rel1-x86_64-aarch64-none-linux-gnu ]; then
 fi
 
 if [ ! -d targetfs ]; then
-<<<<<<< HEAD
     if [ "$SOC" == "j721e" ]; then
         wget https://dr-download.ti.com/software-development/software-development-kit-sdk/MD-U6uMjOroyO/09.02.00.05/tisdk-adas-image-j721e-evm.tar.xz
         mv tisdk-adas-image-j721e-evm.tar.xz targetfs.tar.xz
