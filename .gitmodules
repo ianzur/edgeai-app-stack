@@ -1,6 +1,6 @@
 [submodule "edgeai-dl-inferer"]
 	path = edgeai-dl-inferer
-	url = https://github.com/Grippy98/edgeai-dl-inferer
+	url = https://git.ti.com/git/edgeai/edgeai-dl-inferer.git
 	branch = main
 [submodule "edgeai-tiovx-kernels"]
 	path = edgeai-tiovx-kernels
