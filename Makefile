@@ -11,8 +11,8 @@ GST_APPS_PATH          = edgeai-gst-apps/
 TIOVX_APPS_PATH        = edgeai-tiovx-apps/
 CROSS_COMPILER_PATH    = /usr
 CROSS_COMPILER_PREFIX  = aarch64-linux-gnu-
-TARGET_FS              = $(shell pwd)/targetfs
-INSTALL_PATH           = $(shell pwd)/targetfs
+TARGET_FS              = /
+INSTALL_PATH           = /
 SOC                   ?= none
 
 MAKE                   = make -j$(shell nproc)
@@ -73,13 +73,13 @@ apps_utils:
 	cd $(APPS_UTILS_PATH); \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 apps_utils_install: apps_utils
 	@echo "Install Apps utils"
 	cd $(APPS_UTILS_PATH); \
-	$(MAKE) install DESTDIR=$(INSTALL_PATH) -C build
+	$(MAKE) install -C build
 
 apps_utils_clean:
 	@echo "Clean Apps utils"
@@ -95,13 +95,13 @@ dl_inferer: apps_utils_install
 	cd $(DL_INFERER_PATH); \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 dl_inferer_install: dl_inferer
 	@echo "Install DL Inferer"
 	cd $(DL_INFERER_PATH); \
-	$(MAKE) install DESTDIR=$(INSTALL_PATH) -C build
+	$(MAKE) install -C build
 
 dl_inferer_clean:
 	@echo "Clean DL Inferer"
@@ -115,13 +115,13 @@ tiovx_kernels: apps_utils_install
 	cd $(TIOVX_KERNELS_PATH); \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 tiovx_kernels_install: tiovx_kernels
 	@echo "Install TIOVX Kernels"
 	cd $(TIOVX_KERNELS_PATH); \
-	$(MAKE) install DESTDIR=$(INSTALL_PATH) -C build
+	$(MAKE) install -C build
 
 tiovx_kernels_clean:
 	@echo "Clean TIOVX Kernels"
@@ -135,13 +135,13 @@ tiovx_modules: tiovx_kernels_install
 	cd $(TIOVX_MODULES_PATH); \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 tiovx_modules_install: tiovx_modules
 	@echo "Install TIOVX Modules"
 	cd $(TIOVX_MODULES_PATH); \
-	$(MAKE) install DESTDIR=$(INSTALL_PATH) -C build
+	$(MAKE) install -C build
 
 tiovx_modules_clean:
 	@echo "Clean TIOVX Modules"
@@ -153,25 +153,13 @@ tiovx_modules_clean:
 gst_plugins: tiovx_modules_install dl_inferer_install apps_utils_install
 	@echo "Building GST Plugins"
 	cd $(GST_PLUGINS_PATH); \
-	cp pkgconfig/* $(TARGET_FS)/usr/lib/pkgconfig; \
-	echo [constants] > aarch64-none-linux-gnu.ini; \
-	echo "" >> aarch64-none-linux-gnu.ini; \
-	echo TOOLCHAIN = \'$(CROSS_COMPILER_PATH)/bin/$(CROSS_COMPILER_PREFIX)\' >> aarch64-none-linux-gnu.ini; \
-	echo SYSROOT = \'$(TARGET_FS)\' >> aarch64-none-linux-gnu.ini; \
-	echo PKG_CONFIG_LIBDIR = \'$(TARGET_FS)/usr/lib/pkgconfig\' >> aarch64-none-linux-gnu.ini; \
-	echo SYSTEM = \'linux-gnu\' >> aarch64-none-linux-gnu.ini; \
-	echo CPU_FAMILY = \'aarch64\' >> aarch64-none-linux-gnu.ini; \
-	echo CPU = \'aarch64-none\' >> aarch64-none-linux-gnu.ini; \
-	echo ENDIAN = \'little\' >> aarch64-none-linux-gnu.ini; \
-	echo PREFIX = \'/usr\' >> aarch64-none-linux-gnu.ini; \
-	echo LIBDIR = \'/usr/lib\' >> aarch64-none-linux-gnu.ini; \
-	PKG_CONFIG_PATH='' meson build --cross-file aarch64-none-linux-gnu.ini --cross-file crossbuild/crosscompile.ini; \
-	DESTDIR=$(TARGET_FS) ninja -C build
+	meson build --prefix=/usr -Dpkg_config_path=pkgconfig; \
+	ninja -C build
 
 gst_plugins_install: gst_plugins
 	@echo "Install Gst Plugins"
 	cd $(GST_PLUGINS_PATH); \
-	DESTDIR=$(INSTALL_PATH) ninja -C build install
+	ninja -C build install
 
 gst_plugins_clean:
 	@echo "Clean Gst Plugins"
@@ -185,14 +173,14 @@ gst_apps: dl_inferer_install gst_plugins_install apps_utils_install
 	cd $(GST_APPS_PATH)apps_cpp; \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 gst_apps_install: gst_apps
 	@echo "Install Gst Apps"
 	cd $(GST_APPS_PATH); \
-	mkdir -p $(INSTALL_PATH)/opt/edgeai-gst-apps-pc; \
-	cp -r * $(INSTALL_PATH)/opt/edgeai-gst-apps-pc/
+	mkdir -p /opt/edgeai-gst-apps-pc; \
+	cp -r * /opt/edgeai-gst-apps-pc/
 
 gst_apps_clean:
 	@echo "Clean Gst Apps"
@@ -206,15 +194,15 @@ tiovx_apps: tiovx_modules_install apps_utils_install
 	cd $(TIOVX_APPS_PATH); \
 	mkdir build; \
 	cd build; \
-	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/cross_compile_aarch64.cmake ..; \
+	cmake ..; \
 	$(MAKE)
 
 tiovx_apps_install: tiovx_apps
 	@echo "Install TIOVX Apps"
 	cd $(TIOVX_APPS_PATH); \
-	$(MAKE) install DESTDIR=$(INSTALL_PATH) -C build; \
-	mkdir -p $(INSTALL_PATH)/opt/edgeai-tiovx-apps-pc; \
-	cp -r bin $(INSTALL_PATH)/opt/edgeai-tiovx-apps-pc/
+	$(MAKE) install -C build; \
+	mkdir -p /opt/edgeai-tiovx-apps-pc; \
+	cp -r bin /opt/edgeai-tiovx-apps-pc/
 
 tiovx_apps_clean:
 	@echo "Clean TIOVX Apps"
